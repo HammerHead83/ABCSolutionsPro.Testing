@@ -41,7 +41,7 @@ namespace PureMVC.Controllers
         [ProducesResponseType(200)]
         [ActionName("SetAdminAsync")]
         [HttpPost(Name = "SetAdminAsync")]
-        public async Task<ActionResult> SetAdminAsync([FromBody] ApplicationUser user)
+        public async Task<IActionResult> SetAdminAsync([FromBody] ApplicationUser user)
         {
             if (!User.IsInRole("Administrator"))
                 return Forbid();
@@ -63,7 +63,7 @@ namespace PureMVC.Controllers
         [ProducesResponseType(200)]
         [ActionName("UnsetAdminAsync")]
         [HttpPost(Name = "UnsetAdminAsync")]
-        public async Task<ActionResult> UnsetAdminAsync([FromBody] ApplicationUser user)
+        public async Task<IActionResult> UnsetAdminAsync([FromBody] ApplicationUser user)
         {
             if (!User.IsInRole("Administrator"))
                 return Forbid();
@@ -115,7 +115,7 @@ namespace PureMVC.Controllers
         [ProducesResponseType(200)]
         [ActionName("UnlockUser")]
         [HttpPost(Name = "UnlockUser")]
-        public async Task<ActionResult> UnlockUser([FromBody] string uid)
+        public async Task<IActionResult> UnlockUser([FromBody] string uid)
         {
             if (string.IsNullOrEmpty(uid))
             {

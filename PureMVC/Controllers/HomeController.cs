@@ -31,7 +31,7 @@ namespace PureMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<PartialViewResult> GetMessages()
+        public PartialViewResult GetMessages()
         {
             return PartialView(ViewData["MessagesModel"]);
         }
