@@ -1,0 +1,68 @@
+﻿@model IEnumerable<PureMVC.Models.MsgsViewModels.UserMessageModel>
+
+@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager
+
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<h2>My Messages</h2>
+
+<p>
+    <a asp-action="Create">Create new message</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FromUser)
+            </th>
+            @if (System.Diagnostics.Debugger.IsAttached)
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.ToUser)
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.HasHTMLBody)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Body)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @_userManager.FindByIdAsync(item.FromUser).Result.UserName
+                </td>
+                @if(System.Diagnostics.Debugger.IsAttached)
+                {
+                    <td>
+                        @_userManager.FindByIdAsync(item.ToUser).Result.UserName
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.HasHTMLBody)
+                </td>
+                @if(item.HasHTMLBody)
+                {
+                <td>
+                    <span>@item.Body</span>
+                </td>
+                }else
+                {
+                <td>
+                    @HtmlEncoder.Encode(item.Body)
+                </td>
+                }
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

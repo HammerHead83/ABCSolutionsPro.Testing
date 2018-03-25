@@ -1,0 +1,202 @@
+﻿@model IEnumerable<PureMVC.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Application Users";
+}
+
+@inject UserManager<ApplicationUser> _userManager
+
+<h2>USERS</h2>
+
+<div id="resultMessage" class="info hidden">
+    User<span id="queryType"></span>successfull!
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MidName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsAdmin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsLocked)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EmailConfirmed)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumberConfirmed)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LockoutEnd)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LockoutEnabled)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AccessFailedCount)
+                </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>
+                <div hidden group="user_ids">
+                    @Html.HiddenFor(modelItem => item.Id)
+                </div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MidName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsAdmin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsLocked)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailConfirmed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumberConfirmed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LockoutEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LockoutEnabled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccessFailedCount)
+            </td>
+            <td>
+                @if (item.LockoutEnabled && item.LockoutEnd.Value > DateTimeOffset.Now)
+                {
+                    <input type="button" class="btn" value="Unlock" id="unlock_@item.Id" />
+                }
+                else
+                {
+                    <input type="number" id="secs" />
+                    <input type="button" class="btn" value="Lock" id="lock_@item.Id" />
+                }
+            </td>
+            <td>
+                @if (await _userManager.IsInRoleAsync(item, "Administrator"))
+                {
+                    <input type="button" class="btn" value="Unset ADMIN" id="unadmin_@item.Id" />
+                }
+                else
+                {
+                    <input type="button" class="btn" value="Set ADMIN" id="admin_@item.Id" />
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $('document').ready(function () {
+            $('input.btn').click(function () {
+                var splitter = $(this).attr('id').split('_');
+                var queryType = splitter[0];
+                switch (queryType) {
+                    case 'lock':
+                        var reqBody = '{ uid: "' + splitter[1] + '", secs: "' + $('#secs').val() + '"}';
+                        $.ajax({
+                            url: 'https://localhost:44351/api/UsersWebApi/LockUser',
+                            method: 'POST',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            data: reqBody,
+                            success: function () {
+                                $('#queryType').val(' locked ');
+                                $('#resultMessage').removeProp('hidden');
+                            }
+                        });
+                        break;
+                    case 'unlock':
+                        $.ajax({
+                            url: 'https://localhost:44351/api/UsersWebApi/UnlockUser',
+                            method: 'POST',
+                            dataType: 'json',
+                            contentType: 'text/plain',
+                            data: splitter[1],
+                            success: function () {
+                                $('#queryType').val(' unlocked ');
+                                $('#resultMessage').removeProp('hidden');
+                            }
+                        });
+                        break;
+                    case 'admin':
+                        $.ajax({
+                            url: 'https://localhost:44351/api/UsersWebApi/SetAdminAsync',
+                            method: 'POST',
+                            dataType: 'json',
+                            contentType: 'text/plain',
+                            data: splitter[1],
+                            success: function () {
+                                $('#queryType').val(' setting administrator rights ');
+                                $('#resultMessage').removeProp('hidden');
+                            }
+                        });
+                        break;
+                    case 'unadmin':
+                        $.ajax({
+                            url: 'https://localhost:44351/api/UsersWebApi/UnsetAdminAsync',
+                            method: 'POST',
+                            dataType: 'json',
+                            contentType: 'text/plain',
+                            data: splitter[1],
+                            success: function () {
+                                $('#queryType').val(' remove administrator rights ');
+                                $('#resultMessage').removeProp('hidden');
+                            }
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            });
+        })
+    });
+</script>

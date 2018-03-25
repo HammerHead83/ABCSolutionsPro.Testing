@@ -1,0 +1,42 @@
+﻿@model PureMVC.Models.MsgsViewModels.UserMessageModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>UserMessageModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FromUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FromUser)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ToUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ToUser)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.HasHTMLBody)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.HasHTMLBody)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Body)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Body)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
