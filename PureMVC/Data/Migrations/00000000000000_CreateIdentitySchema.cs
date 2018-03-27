@@ -58,9 +58,9 @@ namespace PureMVC.Data.Migrations
                     SecurityStamp = table.Column<string>(nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    FirstName = table.Column<string>(nullable: false, defaultValue: string.Empty),
-                    LastName = table.Column<string>(nullable: false, defaultValue: string.Empty),
-                    MidName = table.Column<string>(nullable: false, defaultValue: string.Empty),
+                    FirstName = table.Column<string>(nullable: true, defaultValue: string.Empty),
+                    LastName = table.Column<string>(nullable: true, defaultValue: string.Empty),
+                    MidName = table.Column<string>(nullable: true, defaultValue: string.Empty),
                     IsAdmin = table.Column<bool>(nullable: false, defaultValue: false),
                     IsLocked = table.Column<bool>(nullable: false, defaultValue: false)
                 },

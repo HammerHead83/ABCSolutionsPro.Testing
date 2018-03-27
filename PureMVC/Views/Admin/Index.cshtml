@@ -12,7 +12,7 @@
     User<span id="queryType"></span>successfull!
 </div>
 
-<table class="table">
+<table class="table" id="dataTable">
     <thead>
         <tr>
             <th></th>
@@ -108,7 +108,7 @@
                 @Html.DisplayFor(modelItem => item.AccessFailedCount)
             </td>
             <td>
-                @if (item.LockoutEnabled && item.LockoutEnd.Value > DateTimeOffset.Now)
+                @if (item.LockoutEnabled && item.LockoutEnd.HasValue && item.LockoutEnd.Value > DateTimeOffset.Now)
                 {
                     <input type="button" class="btn" value="Unlock" id="unlock_@item.Id" />
                 }
@@ -150,7 +150,7 @@
                             data: reqBody,
                             success: function () {
                                 $('#queryType').val(' locked ');
-                                $('#resultMessage').removeProp('hidden');
+                                $('#resultMessage').removeClass('hidden');
                             }
                         });
                         break;
@@ -159,11 +159,11 @@
                             url: 'https://localhost:44351/api/UsersWebApi/UnlockUser',
                             method: 'POST',
                             dataType: 'json',
-                            contentType: 'text/plain',
-                            data: splitter[1],
+                            contentType: 'application/json',
+                            data: '{uid: "' + splitter[1] + '"}',
                             success: function () {
                                 $('#queryType').val(' unlocked ');
-                                $('#resultMessage').removeProp('hidden');
+                                $('#resultMessage').removeClass('hidden');
                             }
                         });
                         break;
@@ -172,11 +172,11 @@
                             url: 'https://localhost:44351/api/UsersWebApi/SetAdminAsync',
                             method: 'POST',
                             dataType: 'json',
-                            contentType: 'text/plain',
-                            data: splitter[1],
+                            contentType: 'application/json',
+                            data: '{uid: "' + splitter[1] + '"}',
                             success: function () {
                                 $('#queryType').val(' setting administrator rights ');
-                                $('#resultMessage').removeProp('hidden');
+                                $('#resultMessage').removeClass('hidden');
                             }
                         });
                         break;
@@ -185,11 +185,11 @@
                             url: 'https://localhost:44351/api/UsersWebApi/UnsetAdminAsync',
                             method: 'POST',
                             dataType: 'json',
-                            contentType: 'text/plain',
-                            data: splitter[1],
+                            contentType: 'application/json',
+                            data: '{uid: "' + splitter[1] + '"}',
                             success: function () {
                                 $('#queryType').val(' remove administrator rights ');
-                                $('#resultMessage').removeProp('hidden');
+                                $('#resultMessage').removeClass('hidden');
                             }
                         });
                         break;

@@ -21,6 +21,18 @@ namespace PureMVC.Controllers
         public UsersWebApiController(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
+            /*** ITS VERY VERY BAD PRACTICE TO RAISE EXCEPTIONS IN CONSTRUCTOR STUBS.
+             * IN THIS CASE RUN METHOD IN EACH ACTION. ***/
+            /*
+             * CheckUserManager();
+             */
+        }
+
+        private void CheckUserManager()
+        {
+            if (_userManager == null)
+                throw new ApplicationException(@"Oups! UserManager is null, but Controller is mark by [AuthorizeAttribute].
+                    System maybe attacking by hackers. WTF!?!?");
         }
 
         [ProducesResponseType(200)]
@@ -28,6 +40,7 @@ namespace PureMVC.Controllers
         [HttpGet("{uname}", Name = "GetUsers")]
         public IActionResult GetUsers([FromQuery] string uname)
         {
+            CheckUserManager();
 #if DEBUG
             return new ObjectResult(_userManager.Users);
 #else
@@ -41,11 +54,13 @@ namespace PureMVC.Controllers
         [ProducesResponseType(200)]
         [ActionName("SetAdminAsync")]
         [HttpPost(Name = "SetAdminAsync")]
-        public async Task<IActionResult> SetAdminAsync([FromBody] ApplicationUser user)
+        public async Task<IActionResult> SetAdminAsync([FromBody] UID uid)
         {
+            CheckUserManager();
             if (!User.IsInRole("Administrator"))
                 return Forbid();
-            if (!user.IsAdmin)
+            var user = await _userManager.FindByIdAsync(uid.uid);
+            if (user != null && !user.IsAdmin)
             {
                 var setAdminResult = await _userManager.AddToRoleAsync(user, "Administrator");
                 if (setAdminResult.Succeeded)
@@ -63,10 +78,16 @@ namespace PureMVC.Controllers
         [ProducesResponseType(200)]
         [ActionName("UnsetAdminAsync")]
         [HttpPost(Name = "UnsetAdminAsync")]
-        public async Task<IActionResult> UnsetAdminAsync([FromBody] ApplicationUser user)
+        public async Task<IActionResult> UnsetAdminAsync([FromBody] UID uid)
         {
+            CheckUserManager();
             if (!User.IsInRole("Administrator"))
                 return Forbid();
+            if (uid == null)
+                return BadRequest();
+            var user = await _userManager.FindByIdAsync(uid.uid);
+            if (user == null)
+                return BadRequest();
             if ((await _userManager.GetUsersInRoleAsync("Administrator")).Count < 2 || !user.IsAdmin)
                 return BadRequest();
             var unsetAdminResult = await _userManager.RemoveFromRoleAsync(user, "Administrator");
@@ -77,6 +98,12 @@ namespace PureMVC.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [Serializable]
+        public sealed class UID
+        {
+            public string uid { get; set; }
         }
 
         [Serializable]
@@ -91,10 +118,11 @@ namespace PureMVC.Controllers
         [HttpPost(Name = "LockUser")]
         public async Task<IActionResult> LockUser([FromBody] LockData data)
         {
+            CheckUserManager();
+            if (!User.IsInRole("Administrator"))
+                return Forbid();
             if (data == null || string.IsNullOrEmpty(data.secs) || string.IsNullOrEmpty(data.uid))
-            {
                 return BadRequest();
-            }
             double dSecs = default(double);
             if (!double.TryParse(data.secs, out dSecs))
             {
@@ -115,13 +143,16 @@ namespace PureMVC.Controllers
         [ProducesResponseType(200)]
         [ActionName("UnlockUser")]
         [HttpPost(Name = "UnlockUser")]
-        public async Task<IActionResult> UnlockUser([FromBody] string uid)
+        public async Task<IActionResult> UnlockUser([FromBody] UID uid)
         {
-            if (string.IsNullOrEmpty(uid))
-            {
+            CheckUserManager();
+            if (!User.IsInRole("Administrator"))
+                return Forbid();
+            if (uid == null)
                 return BadRequest();
-            }
-            var user = await _userManager.FindByIdAsync(uid);
+            var user = await _userManager.FindByIdAsync(uid.uid);
+            if (user == null)
+                return BadRequest();
             if (await _userManager.GetLockoutEnabledAsync(user) && await _userManager.IsLockedOutAsync(user))
             {
                 await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.Now.AddDays(-1));
