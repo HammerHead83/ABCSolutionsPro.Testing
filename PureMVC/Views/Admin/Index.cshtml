@@ -143,7 +143,7 @@
                     case 'lock':
                         var reqBody = '{ uid: "' + splitter[1] + '", secs: "' + $('#secs').val() + '"}';
                         $.ajax({
-                            url: 'https://localhost:44351/api/UsersWebApi/LockUser',
+                            url: 'api/UsersWebApi/LockUser',
                             method: 'POST',
                             dataType: 'json',
                             contentType: 'application/json',
@@ -156,7 +156,7 @@
                         break;
                     case 'unlock':
                         $.ajax({
-                            url: 'https://localhost:44351/api/UsersWebApi/UnlockUser',
+                            url: 'api/UsersWebApi/UnlockUser',
                             method: 'POST',
                             dataType: 'json',
                             contentType: 'application/json',
@@ -169,7 +169,7 @@
                         break;
                     case 'admin':
                         $.ajax({
-                            url: 'https://localhost:44351/api/UsersWebApi/SetAdminAsync',
+                            url: 'api/UsersWebApi/SetAdminAsync',
                             method: 'POST',
                             dataType: 'json',
                             contentType: 'application/json',
@@ -182,7 +182,7 @@
                         break;
                     case 'unadmin':
                         $.ajax({
-                            url: 'https://localhost:44351/api/UsersWebApi/UnsetAdminAsync',
+                            url: 'api/UsersWebApi/UnsetAdminAsync',
                             method: 'POST',
                             dataType: 'json',
                             contentType: 'application/json',

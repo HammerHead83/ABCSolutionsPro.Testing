@@ -45,11 +45,12 @@
 <script>
     $(function () {
         $('document').ready(function () {
-            $.getJSON('https://localhost:44351/api/UsersWebApi/GetUsers?uname=' + $('#uname').val(), function (resp) {
+            $.getJSON('/api/UsersWebApi/GetUsers?uname=' + $('#uname').val(), function (resp) {
                 for (var i = 0; i < resp.length; i++) {
                     $('<option id="' + resp[i].id + '">' + resp[i].userName + '</option>').appendTo('#otherusers');
                 }
             });
+            
         });
     });
 </script>

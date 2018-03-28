@@ -37,7 +37,7 @@ namespace PureMVC.Controllers
 
         [ProducesResponseType(200)]
         [ActionName("GetUsers")]
-        [HttpGet("{uname}", Name = "GetUsers")]
+        [HttpGet(Name = "GetUsers")]
         public IActionResult GetUsers([FromQuery] string uname)
         {
             CheckUserManager();
