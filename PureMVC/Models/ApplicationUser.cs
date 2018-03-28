@@ -14,10 +14,6 @@ namespace PureMVC.Models
         public string MidName { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsLocked { get; set; }
-        public override string UserName { get =>
-                string.IsNullOrWhiteSpace((FirstName + LastName + MidName).Trim()) ?
-                (FirstName + " " + LastName + " " + MidName).Trim() : Email;
-        }
 
     }
 }

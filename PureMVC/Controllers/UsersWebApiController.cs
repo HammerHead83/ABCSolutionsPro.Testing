@@ -41,14 +41,7 @@ namespace PureMVC.Controllers
         public IActionResult GetUsers([FromQuery] string uname)
         {
             CheckUserManager();
-#if DEBUG
             return new ObjectResult(_userManager.Users);
-#else
-            if (string.IsNullOrEmpty(uname))
-                return BadRequest();
-            return new ObjectResult(_userManager.Users.SkipWhile(u=>u.Email == uname));
-#endif
-
         }
 
         [ProducesResponseType(200)]
