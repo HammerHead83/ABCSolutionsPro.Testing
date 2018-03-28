@@ -20,6 +20,7 @@ namespace PureMVC.Controllers
         }
 
         [HttpGet]
+
         public IActionResult Index()
         {
             return View(_userManager.Users);

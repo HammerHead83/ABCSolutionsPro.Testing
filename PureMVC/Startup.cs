@@ -37,6 +37,12 @@ namespace PureMVC
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication().AddGoogle(opts =>
+            {
+                opts.ClientId = Configuration["Authentication:Google:ClientId"];
+                opts.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
