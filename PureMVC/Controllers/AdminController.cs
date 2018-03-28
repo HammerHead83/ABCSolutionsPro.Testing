@@ -20,20 +20,9 @@ namespace PureMVC.Controllers
         }
 
         [HttpGet]
-#if DEBUG
         public IActionResult Index()
-#else
-        public async Task<IActionResult> Index()
-#endif
         {
-            IEnumerable<ApplicationUser> users;
-#if DEBUG
-            users = _userManager.Users;
-#else
-            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-            users = _userManager.Users.Where(u => u.Id != currentUser.Id);
-#endif
-            return View(users);
+            return View(_userManager.Users);
         }
     }
 }

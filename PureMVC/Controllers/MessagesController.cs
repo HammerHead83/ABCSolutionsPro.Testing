@@ -45,10 +45,12 @@ namespace PureMVC.Controllers
                 userMessageModel.Id = Guid.NewGuid();
                 userMessageModel.FromUser = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
                 userMessageModel.ToUser = (await _userManager.FindByNameAsync(userMessageModel.ToUser)).Id;
-                bool testForSelfSending = true;
-#if DEBUG
-                testForSelfSending = false;
+                bool testForSelfSending = false;
+                /* #if DEBUG is currently don't working
+#if !DEBUG
+                testForSelfSending = true;
 #endif
+                */
                 if (testForSelfSending)
                 {
                     if (!userMessageModel.FromUser.Equals(userMessageModel.ToUser))
