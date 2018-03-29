@@ -162,7 +162,7 @@ namespace PureMVC.Data.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValue: Guid.NewGuid()),
                     FromUser = table.Column<string>(nullable: false),
                     ToUser = table.Column<string>(nullable: false),
-                    HasHTMLBody = table.Column<bool>(nullable: false, defaultValue: false),
+                    IsEmail = table.Column<bool>(nullable: false, defaultValue: false),
                     Body = table.Column<string>(nullable: false, defaultValue: string.Empty)
                 },
                 constraints: table =>
