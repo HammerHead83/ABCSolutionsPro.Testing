@@ -18,11 +18,14 @@ namespace PureMVC.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly Services.IEmailSender _sender;
 
-        public MessagesController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public MessagesController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
+            Services.IEmailSender sender)
         {
             _context = context;
             _userManager = userManager;
+            _sender = sender;
         }
         
         public async Task<IActionResult> Index()
@@ -43,20 +46,22 @@ namespace PureMVC.Controllers
             if (ModelState.IsValid)
             {
                 userMessageModel.Id = Guid.NewGuid();
+                var toEmail = userMessageModel.ToUser;
                 userMessageModel.FromUser = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
                 userMessageModel.ToUser = (await _userManager.FindByNameAsync(userMessageModel.ToUser)).Id;
                 // Check wether message doesn't be sent to myself
-                bool testForSelfSending = true;
-                if (testForSelfSending)
-                {
-                    if (!userMessageModel.FromUser.Equals(userMessageModel.ToUser))
-                        _context.Add(userMessageModel);
-                        await _context.SaveChangesAsync();
-                }
-                else
+                if (!userMessageModel.FromUser.Equals(userMessageModel.ToUser))
                 {
                     _context.Add(userMessageModel);
                     await _context.SaveChangesAsync();
+                    if (userMessageModel.IsEmail && _sender != null)
+                    {
+                        var bodyBuilder = new System.Text.StringBuilder();
+                        bodyBuilder.AppendFormat("<h2>You have new message from {0}</h2>.<br />", User.Identity.Name);
+                        bodyBuilder.AppendFormat("<div class=\"message\">{0}</div><br /><br />", userMessageModel.Body);
+                        bodyBuilder.AppendFormat("<div class=\"footer\">Pure MVC {0}</div>", DateTime.UtcNow.Year);
+                        await _sender.SendEmailAsync(toEmail, "Pure MVC user messages subsystem.", bodyBuilder.ToString());
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }

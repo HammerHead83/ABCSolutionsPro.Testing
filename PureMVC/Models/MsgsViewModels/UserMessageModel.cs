@@ -16,8 +16,8 @@ namespace PureMVC.Models.MsgsViewModels
         [Display(Name = "To")]
         public string ToUser { get; set; }
 
-        [Display(Name = "HTML")]
-        public bool HasHTMLBody { get; set; }
+        [Display(Name = "IsEmail")]
+        public bool IsEmail { get; set; }
         
         public string Body { get; set; }
     }

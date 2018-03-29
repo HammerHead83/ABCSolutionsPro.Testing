@@ -24,7 +24,7 @@
                 </th>
             }
             <th>
-                @Html.DisplayNameFor(model => model.HasHTMLBody)
+                @Html.DisplayNameFor(model => model.IsEmail)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Body)
@@ -46,19 +46,11 @@
                     </td>
                 }
                 <td>
-                    @Html.DisplayFor(modelItem => item.HasHTMLBody)
+                    @Html.DisplayFor(modelItem => item.IsEmail)
                 </td>
-                @if(item.HasHTMLBody)
-                {
                 <td>
                     <span>@item.Body</span>
                 </td>
-                }else
-                {
-                <td>
-                    @HtmlEncoder.Encode(item.Body)
-                </td>
-                }
                 <td>
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>

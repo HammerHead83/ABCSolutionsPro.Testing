@@ -28,21 +28,16 @@ namespace PureMVC
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
-
-            /*
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            */
+            
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddAuthentication().AddGoogle(opts =>
             {
-                opts.ClientId = Configuration["Authentication:Google:ClientId"];
-                opts.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                opts.ClientId = Configuration["GoogleClientId"];
+                opts.ClientSecret = Configuration["GoogleClientSecret"];
             });
-
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
