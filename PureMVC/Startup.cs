@@ -32,7 +32,6 @@ namespace PureMVC
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
             services.AddAuthentication().AddGoogle(opts =>
             {
                 opts.ClientId = Configuration["GoogleClientId"];

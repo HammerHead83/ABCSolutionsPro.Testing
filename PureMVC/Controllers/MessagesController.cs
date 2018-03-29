@@ -41,7 +41,7 @@ namespace PureMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FromUser,ToUser,HasHTMLBody,Body")] UserMessageModel userMessageModel)
+        public async Task<IActionResult> Create([Bind("Id,FromUser,ToUser,IsEmail,Body")] UserMessageModel userMessageModel)
         {
             if (ModelState.IsValid)
             {

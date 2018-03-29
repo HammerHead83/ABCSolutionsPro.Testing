@@ -11,7 +11,7 @@ using System.Net.Http;
 
 namespace PureMVC.Controllers
 {
-    [Authorize] /* [RequireHttps] */
+    [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     public class UsersWebApiController : Controller

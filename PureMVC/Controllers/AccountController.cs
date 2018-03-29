@@ -224,9 +224,8 @@ namespace PureMVC.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = string.Concat(model.FirstName, " ", model.LastName, " ",
-                    model.MidName).Trim(), Email = model.Email, FirstName = model.FirstName, MidName = model.MidName,
-                    LastName = model.LastName, IsLocked = false };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName,
+                    MidName = model.MidName, LastName = model.LastName, IsLocked = false };
                 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

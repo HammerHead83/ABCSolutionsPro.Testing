@@ -18,7 +18,8 @@ namespace PureMVC.Models.MsgsViewModels
 
         [Display(Name = "IsEmail")]
         public bool IsEmail { get; set; }
-        
+
+        [Display(Name = "Body")]
         public string Body { get; set; }
     }
 }
