@@ -64,7 +64,7 @@
                         </p>
                     </div>
                 }
-                else
+                else if (Context.Request.IsHttps)
                 {
                     <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                         <div>
