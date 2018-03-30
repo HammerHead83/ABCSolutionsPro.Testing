@@ -24,8 +24,8 @@ namespace PureMVC
             /*
                 .UseKestrel(options =>
                 {
-                    options.Listen(IPAddress.Loopback, 44351, listenOptions => {
-                        listenOptions.UseHttps("certificate.pfx", "password");
+                    options.Listen(IPAddress.Loopback, 1691, listenOptions => {
+                        listenOptions.UseHttps("certificate.pfx");
                     });
                 })
             */
